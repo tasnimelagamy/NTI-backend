@@ -1,20 +1,16 @@
-import {Router} from "express"
-import { createSubcategory, deleteSubcategory, getSubcategories, getSubcategory, updateSubcategory } from "../controllers/subcategories";
-import { createSubcategoryValidator, deleteSubcategoryValidator, getSubcategoryValidator, updateSubcategoryValidator } from "../utils/validation/subcategoriesValidator"
-import { filterData } from './../controllers/subcategories';
+import { Router } from "express";
+import { createSubcategory, deleteSubcategory, filterData, getSubcategories, getSubcategory, updateSubcategory } from "../controllers/subcategories";
+import { createSubcategoryValidator, deleteSubcategoryValidator, getSubcategoryValidator, updateSubcategoryValidator } from "../utils/validation/subcategoriesValidator";
+import { allowedTo, checkActive, protectRoutes } from "../controllers/auth";
 const subcategoriesRoute: Router = Router({ mergeParams: true });
 
-
-
 subcategoriesRoute.route('/')
-.get(filterData,getSubcategories)
-.post( createSubcategoryValidator,createSubcategory)
+  .get(filterData, getSubcategories)
+  .post(protectRoutes, checkActive, allowedTo('manager', 'admin'), createSubcategoryValidator, createSubcategory);
 
 subcategoriesRoute.route('/:id')
-.get(getSubcategoryValidator,getSubcategory)
-.put(updateSubcategoryValidator,updateSubcategory)
-.delete(deleteSubcategoryValidator,deleteSubcategory)
-
-
+  .get(getSubcategoryValidator, getSubcategory)
+  .put(protectRoutes, checkActive, allowedTo('manager', 'admin'), updateSubcategoryValidator, updateSubcategory)
+  .delete(protectRoutes, checkActive, allowedTo('manager', 'admin'), deleteSubcategoryValidator, deleteSubcategory);
 
 export default subcategoriesRoute;

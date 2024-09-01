@@ -1,15 +1,16 @@
 import { Router } from "express";
-import { createProduct, deleteProduct, getProduct, getProducts, updateProduct,upload } from "../controllers/products";
+import { createProduct, deleteProduct, getProduct, getProducts, resizeImages, updateProduct, uploadProductImages } from "../controllers/products";
 import { createProductValidator, deleteProductValidator, getProductValidator, updateProductValidator } from "../utils/validation/products";
+import { allowedTo, checkActive, protectRoutes } from "../controllers/auth";
 const productsRoute: Router = Router();
 
 productsRoute.route('/')
   .get(getProducts)
-  .post( upload.single('cover'),createProductValidator, createProduct);
+  .post(protectRoutes, checkActive, allowedTo('manager', 'admin'), uploadProductImages, resizeImages, createProductValidator, createProduct);
 
 productsRoute.route('/:id')
   .get(getProductValidator, getProduct)
-  .put(updateProductValidator, updateProduct)
-  .delete(deleteProductValidator, deleteProduct);
+  .put(protectRoutes, checkActive, allowedTo('manager', 'admin'), updateProductValidator, updateProduct)
+  .delete(protectRoutes, checkActive, allowedTo('manager', 'admin'), deleteProductValidator, deleteProduct);
 
 export default productsRoute;
