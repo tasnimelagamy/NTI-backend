@@ -5,10 +5,6 @@ import ApiErrors from '../utils/apiErrors';
 import { FilterData } from '../interfaces/filterData';
 import Features from '../utils/features';
 
-
-
-
-
 export const getAll = <modelType>(model: mongoose.Model<any>, modelName: string) => asyncHandler(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   let filterData: FilterData = {};
   let searchLength: number = 0;
@@ -28,8 +24,10 @@ export const getAll = <modelType>(model: mongoose.Model<any>, modelName: string)
 
   res.status(200).json({ length: documents.length, pagination: paginationResult, data: documents })
 })
-export const getOne = <modelType>(model: mongoose.Model<any>) => asyncHandler(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  const document = await model.findById(req.params.id);
+export const getOne = <modelType>(model: mongoose.Model<any>, population?: string) => asyncHandler(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  let query = model.findById(req.params.id);
+  if (population) { query = query.populate(population) };
+  const document = await query;
   if (!document) {
     return next(new ApiErrors('Document not found', 404))
   }
@@ -44,6 +42,7 @@ export const updateOne = <modelType>(model: mongoose.Model<any>) => asyncHandler
   if (!document) {
     return next(new ApiErrors('Document not found', 404))
   }
+  document.save();
   res.status(200).json({ data: document });
 })
 export const deleteOne = <modelType>(model: mongoose.Model<any>) => asyncHandler(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -51,4 +50,6 @@ export const deleteOne = <modelType>(model: mongoose.Model<any>) => asyncHandler
   if (!document) {
     return next(new ApiErrors('Document not found', 404))
   }
-  res.status(204).json({ data: document }); }) 
+  document.remove();
+  res.status(204).json({ data: document });
+})

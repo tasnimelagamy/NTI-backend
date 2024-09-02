@@ -4,20 +4,22 @@ import sharp from 'sharp';
 import { Products } from "../interfaces/products";
 import productsModel from "../models/productsModel";
 import asyncHandler from 'express-async-handler';
-import { uploadMultiImages, uploadSingleImage } from "../middlewares/uploadImages";
-
-
-
+import { uploadMultiImages } from "../middlewares/uploadImages";
 
 export const uploadProductImages = uploadMultiImages([
   { name: 'cover', maxCount: 1 },
   { name: 'images', maxCount: 5 }
 ])
- 
 
 export const resizeImages = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
- 
-  
+  // if (req.file) {
+  //   const coverName: string = `Product-${Date.now()}-cover.png`
+  //   await sharp(req.file.buffer)
+  //     .toFormat('png')
+  //     .png({ quality: 95 })
+  //     .toFile(`uploads/products/${coverName}`)
+  //   req.body.cover = coverName;
+  // }
   if (req.files) {
     if (req.files.cover) {
       const coverName: string = `Product-${Date.now()}-cover.png`
@@ -38,15 +40,12 @@ export const resizeImages = asyncHandler(async (req: Request, res: Response, nex
         req.body.images.push(imageName)
       })
     }
-   }
+  }
   next()
- })
-
-
-
+})
 
 export const createProduct = createOne<Products>(productsModel)
 export const getProducts = getAll<Products>(productsModel, 'products')
-export const getProduct = getOne<Products>(productsModel)
+export const getProduct = getOne<Products>(productsModel, 'reviews')
 export const updateProduct = updateOne<Products>(productsModel)
 export const deleteProduct = deleteOne<Products>(productsModel)

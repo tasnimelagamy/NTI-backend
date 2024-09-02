@@ -10,6 +10,7 @@ const usersSchema: Schema = new Schema<Users>({
   image: String,
   role: { type: String, required: true, enum: ['manager', 'admin', 'user'], default: 'user' },
   active: { type: Boolean, default: true },
+  wishlist:[{type:Schema.Types.ObjectId ,ref:'products'}],
   passwordChangedAt: Date,
   resetCode: String,
   resetCodeExpireTime: Date,
@@ -17,15 +18,15 @@ const usersSchema: Schema = new Schema<Users>({
 }, { timestamps: true });
 
 
-const imageUrl = (document: Users) => {
-    if (document.image) {
-      const imageUrl: string = `${process.env.BASE_URL}/users/${document.image}`;
-      document.image = imageUrl;
-    }
-  }
+// const imageUrl = (document: Users) => {
+//     if (document.image) {
+//       const imageUrl: string = `${process.env.BASE_URL}/users/${document.image}`;
+//       document.image = imageUrl;
+//     }
+//   }
   
-  usersSchema
-    .post('init', (document: Users) => { imageUrl(document) })
+//   usersSchema
+//     .post('init', (document: Users) => { imageUrl(document) })
 //    .post('save', (document: Users) => { imageUrl(document) })
 
 usersSchema.pre<Users>('save', async function (next) {

@@ -14,27 +14,28 @@ const productsSchema: Schema = new Schema<Products>({
   images: [String],
   category: { type: Schema.Types.ObjectId, required: true, ref: 'categories' },
   subcategory: { type: Schema.Types.ObjectId, required: true, ref: 'subcategories' }
-}, { timestamps: true });
+}, { timestamps: true , toJSON: {virtuals:true}, toObject:{virtuals:true} });
 
+productsSchema.virtual('reviews',{ref:'reviews',foreignField:'product', localField:'_id'})
 
-const imageUrl = (document: Products) => {
-  if (document.cover) {
-    const imageUrl: string = `${process.env.BASE_URL}/products/${document.cover}`;
-    document.cover = imageUrl;
-  }
-  if (document.images) {
-    const imageList: string[] = [];
-    document.images.forEach(image => {
-      const imageUrl: string = `${process.env.BASE_URL}/products/${image}`
-      imageList.push(imageUrl);
-    });
-    document.images = imageList;
-  }
-}
+// const imageUrl = (document: Products) => {
+//   if (document.cover) {
+//     const imageUrl: string = `${process.env.BASE_URL}/products/${document.cover}`;
+//     document.cover = imageUrl;
+//   }
+//   if (document.images) {
+//     const imageList: string[] = [];
+//     document.images.forEach(image => {
+//       const imageUrl: string = `${process.env.BASE_URL}/products/${image}`
+//       imageList.push(imageUrl);
+//     });
+//     document.images = imageList;
+//   }
+// }
 
-productsSchema
-  .post('init', (document: Products) => { imageUrl(document) })
-  .post('save', (document: Products) => { imageUrl(document) })
+// productsSchema
+//   .post('init', (document: Products) => { imageUrl(document) })
+//   .post('save', (document: Products) => { imageUrl(document) })
 
 
 productsSchema.pre<Products>(/^find/, function (next) {

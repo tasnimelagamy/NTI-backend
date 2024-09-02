@@ -2,7 +2,9 @@ import { Router } from "express";
 import { createProduct, deleteProduct, getProduct, getProducts, resizeImages, updateProduct, uploadProductImages } from "../controllers/products";
 import { createProductValidator, deleteProductValidator, getProductValidator, updateProductValidator } from "../utils/validation/products";
 import { allowedTo, checkActive, protectRoutes } from "../controllers/auth";
+import reviewsRoute from "./reviewsRoute";
 const productsRoute: Router = Router();
+productsRoute.use('/:productId/reviews', reviewsRoute);
 
 productsRoute.route('/')
   .get(getProducts)

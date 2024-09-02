@@ -1,10 +1,17 @@
 import { Router } from "express";
-import { changeUserPassword, createUser, deleteUser, getUser, getUsers, resizeUserImage, updateUser, uploadUserImage } from "../controllers/users";
-import { createUserValidator, deleteUserValidator, getUserValidator, updateUserValidator } from "../utils/validation/userValidator";
- import { allowedTo, checkActive, protectRoutes } from "../controllers/auth";
+import { changeUserPassword, createUser, deleteUser, setLoggedUserId, getUser, getUsers, resizeUserImage, updateUser, uploadUserImage, updateLoggedUser, changeLoggedUserPassword } from "../controllers/users";
+import { changeLoggedUserPasswordValidator, changeUserPasswordValidator, createUserValidator, deleteUserValidator, getUserValidator, updateLoggedUserValidator, updateUserValidator } from "../utils/validation/userValidator";
+import { allowedTo, checkActive, protectRoutes } from "../controllers/auth";
 
 const usersRoute: Router = Router();
- usersRoute.use(protectRoutes, checkActive, allowedTo('manager'))
+usersRoute.use(protectRoutes, checkActive);
+
+usersRoute.get('/me', setLoggedUserId, getUser)
+usersRoute.put('/updateMe', updateLoggedUserValidator, updateLoggedUser)
+usersRoute.put('/changeMyPassword', changeLoggedUserPasswordValidator, changeLoggedUserPassword)
+usersRoute.delete('/deleteMe', allowedTo('user'), setLoggedUserId, deleteUser)
+
+usersRoute.use(allowedTo('manager'));
 usersRoute.route('/')
   .get(getUsers)
   .post(uploadUserImage, resizeUserImage, createUserValidator, createUser);
@@ -14,6 +21,6 @@ usersRoute.route('/:id')
   .put(uploadUserImage, resizeUserImage, updateUserValidator, updateUser)
   .delete(deleteUserValidator, deleteUser);
 
- usersRoute.put('/:id/changePassword', changeUserPassword)
+usersRoute.put('/:id/changePassword', changeUserPasswordValidator, changeUserPassword)
 
 export default usersRoute;
