@@ -26,6 +26,9 @@ export const createUserValidator: RequestHandler[] = [
   check('confirmPassword')
     .notEmpty().withMessage('confirm password required')
     .isLength({ min: 6, max: 20 }).withMessage('confirm password length must between 6 and 20 char'),
+    check('phone')
+    .notEmpty().withMessage('Phone number required')
+     .isMobilePhone('ar-EG').withMessage('invalid phone number'),
   validatorMiddleware
 ]
 

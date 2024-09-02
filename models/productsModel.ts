@@ -14,7 +14,7 @@ const productsSchema: Schema = new Schema<Products>({
   images: [String],
   category: { type: Schema.Types.ObjectId, required: true, ref: 'categories' },
   subcategory: { type: Schema.Types.ObjectId, required: true, ref: 'subcategories' }
-}, { timestamps: true , toJSON: {virtuals:true}, toObject:{virtuals:true} });
+}, { timestamps: true , toJSON: {virtual:true}, toObject:{virtual:true} });
 
 productsSchema.virtual('reviews',{ref:'reviews',foreignField:'product', localField:'_id'})
 
