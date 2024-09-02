@@ -4,6 +4,8 @@ import categoriesRoute from "./categoriesRoute";
 import subcategoriesRoute from "./subcategoriesRoute";
 import ApiErrors from "../utils/apiErrors";
 import globalErrors from "../middlewares/globalErrors";
+import couponsRoute from './couponsRoute';
+import cartsRoute from './cartsRoute';
 import productsRoute from './products';
 import reviewsRoute from './reviewsRoute';
 import usersRoute from './usersRoute';
@@ -15,6 +17,8 @@ const mountRoutes = (app: Application): void => {
   app.use('/api/v1/subcategories', subcategoriesRoute);
   app.use('/api/v1/products', productsRoute);
   app.use('/api/v1/reviews', reviewsRoute);
+  app.use('/api/v1/coupons', couponsRoute);
+  app.use('/api/v1/carts', cartsRoute);
    app.use('/api/v1/wishlist', wishlistRoute);
   app.use('/api/v1/users', usersRoute);
   app.use('/api/v1/auth', authRoute);
