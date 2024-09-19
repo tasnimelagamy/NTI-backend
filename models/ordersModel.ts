@@ -14,7 +14,7 @@ const ordersSchema: Schema = new Schema<Orders>({
   isDelivered: { type: Boolean, default: false },
   isPaid: { type: Boolean, default: false },
   taxPrice: { type: Number, default: 0 },
-  address: { type: String, required: true },
+  // address: { type: String, required: true },
   user: { type: Schema.Types.ObjectId, ref: 'users' }
 }, { timestamps: true });
 

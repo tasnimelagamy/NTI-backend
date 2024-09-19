@@ -6,11 +6,8 @@ import asyncHandler from 'express-async-handler';
 import ApiErrors from "../utils/apiErrors";
 import { uploadSingleImage } from "../middlewares/uploadImages";
 import sharp from "sharp";
-import  bcrypt  from 'bcryptjs';
+import bcrypt from 'bcryptjs';
 import { createToken } from "../utils/createToken";
-
-
-
 
 export const createUser = createOne<Users>(usersModel)
 export const getUsers = getAll<Users>(usersModel, 'users')
@@ -37,7 +34,6 @@ export const resizeUserImage = asyncHandler(async (req, res, next) => {
   }
   next();
 });
-
 export const changeUserPassword = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
   const user = await usersModel.findByIdAndUpdate(req.params.id, {
     password: await bcrypt.hash(req.body.password, 13),
@@ -59,10 +55,10 @@ export const updateLoggedUser = asyncHandler(async (req: Request, res: Response,
   res.status(200).json({ data: user, message: 'user updated successfully' })
 })
 export const changeLoggedUserPassword = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-  const user = await usersModel.findByIdAndUpdate(req.user?.id, {
+  const user = await usersModel.findByIdAndUpdate(req.user?._id, {
     password: await bcrypt.hash(req.body.password, 13),
     passwordChangedAt: Date.now()
   }, { new: true })
-  const token: string = createToken(user?._id)
+  const token: string = createToken(user?._id, user?.role!)
   res.status(200).json({ message: 'password changed successfully', token })
 });

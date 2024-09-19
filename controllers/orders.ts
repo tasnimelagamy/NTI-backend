@@ -8,7 +8,6 @@ import cartsModel from "../models/cartsModel";
 import ApiErrors from "../utils/apiErrors";
 import { CartProducts } from "../interfaces/carts";
 import productsModel from "../models/productsModel";
-import { Users } from './../interfaces/users';
 
 // filterOrders
 export const filterOrders = (req: Request, res: Response, next: NextFunction): void => {
@@ -40,7 +39,7 @@ export const createOrder = asyncHandler(async (req: Request, res: Response, next
   const order: Orders = await ordersModel.create({
     user: req.user?._id,
     totalPrice: totalOrderPrice,
-    address: req.body.address,
+    // address: req.body.address || 'Mansoura, Egypt',
     cartItems: cart.cartItems,
     taxPrice
   })
@@ -60,6 +59,11 @@ export const createOrder = asyncHandler(async (req: Request, res: Response, next
 
 // update order [isPaid, isDelivered]
 export const isOrderPaid = asyncHandler(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  // const order = await ordersModel.findById(req.params.id);
+  // if (!order) { return next(new ApiErrors('order not found', 404)) };
+  // order.isPaid = true;
+  // order.paidAt = Date.now();
+  // const updatedOrder = await order.save();
   const order = await ordersModel.findByIdAndUpdate(req.params.id, {
     isPaid: true,
     paidAt: Date.now()
@@ -69,6 +73,11 @@ export const isOrderPaid = asyncHandler(async (req: Request, res: Response, next
 });
 
 export const isOrderDelivered = asyncHandler(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  // const order = await ordersModel.findById(req.params.id);
+  // if (!order) { return next(new ApiErrors('order not found', 404)) };
+  // order.isDelivered = true;
+  // order.deliveredAt = Date.now();
+  // const updatedOrder = await order.save();
   const order = await ordersModel.findByIdAndUpdate(req.params.id, {
     isDelivered: true,
     deliveredAt: Date.now()

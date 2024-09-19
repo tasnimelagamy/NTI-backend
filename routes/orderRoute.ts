@@ -1,14 +1,15 @@
 import { Router } from "express";
 import { allowedTo, checkActive, protectRoutes } from "../controllers/auth";
 import { createOrder, filterOrders, getOrder, getOrders, isOrderDelivered, isOrderPaid } from "../controllers/orders";
-import { createOrderValidator, getOrderValidator } from "../utils/validation/orderValidator";
+import {  getOrderValidator } from "../utils/validation/orderValidator";
 
 const ordersRoute: Router = Router();
 ordersRoute.use(protectRoutes, checkActive)
 
 ordersRoute.route('/')
   .get(filterOrders, getOrders)
-  .post(allowedTo('user'), createOrderValidator, createOrder);
+   .post(allowedTo('user'), createOrder);
+   
 
 ordersRoute.route('/:id').get(getOrderValidator, getOrder)
 

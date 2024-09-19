@@ -46,10 +46,9 @@ export const updateOne = <modelType>(model: mongoose.Model<any>) => asyncHandler
   res.status(200).json({ data: document });
 })
 export const deleteOne = <modelType>(model: mongoose.Model<any>) => asyncHandler(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  const document = await model.findByIdAndDelete(req.params.id);
+  const document = await model.findOneAndDelete({ _id: req.params.id });
   if (!document) {
     return next(new ApiErrors(`${req.__('not_found')}`, 404))
   }
-  document.remove();
   res.status(204).json({ data: document });
 })

@@ -7,8 +7,6 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const database = () => {
     mongoose_1.default.connect(process.env.DB).then(() => {
         console.log(`Database connected to : ${process.env.DB}`);
-    }).catch((err) => {
-        console.log(err);
     });
 };
 exports.default = database;

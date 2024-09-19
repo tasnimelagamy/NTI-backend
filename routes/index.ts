@@ -26,8 +26,10 @@ const mountRoutes = (app: Application): void => {
   app.use('/api/v1/auth', authRoute);
   app.all('*', (req: Request, res: Response, next: NextFunction) => {
     next(new ApiErrors(`The router ${req.originalUrl} is not found`, 400))
+    
   })
   app.use(globalErrors);
+
 }
 
 // e-commerce system
